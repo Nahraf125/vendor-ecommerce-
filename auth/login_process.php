@@ -15,26 +15,35 @@ $user = mysqli_fetch_assoc($result);
 
 if ($user && password_verify($password, $user['password'])) {
 
-   if ($user && password_verify($password, $user['password'])) {
+    if ($user['role'] == 'vendor') {
+        $sql_v = "SELECT status, rejection_reason FROM vendors WHERE user_id = ?";
+        $stmt_v = mysqli_prepare($conn, $sql_v);
+        mysqli_stmt_bind_param($stmt_v, "i", $user['id']);
+        mysqli_stmt_execute($stmt_v);
+        $result_v = mysqli_stmt_get_result($stmt_v);
+        $vendor_data = mysqli_fetch_assoc($result_v);
+
+        if ($vendor_data['status'] == 'rejected') {
+            header("Location: /vendorwaala/customer/index.php?error=rejected&reason=" . urlencode($vendor_data['rejection_reason']));
+            exit();
+        }
+    }
 
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['name'] = $user['name'];
     $_SESSION['role'] = $user['role'];
 
     if ($user['role'] == 'admin') {
-        header("Location: ../admin/dashboard.php");
+        header("Location: /vendorwaala/admin/dashboard.php");
     } elseif ($user['role'] == 'vendor') {
-        header("Location: ../vendor/dashboard.php");
+        header("Location: /vendorwaala/vendor/dashboard.php");
     } else {
-        header("Location: ../customer/dashboard.php");
+        header("Location: /vendorwaala/customer/index.php");
     }
     exit();
 
 } else {
-    echo "Invalid email or password";
-}
-
-} else {
-    echo "Invalid email or password";
+    header("Location: /vendorwaala/customer/index.php?error=invalid");
+    exit();
 }
 ?>

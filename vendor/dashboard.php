@@ -6,6 +6,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'vendor') {
     header("Location: ../auth/login.php");
     exit();
 }
+require '../includes/header.php';
+
 
 $user_id = $_SESSION['user_id'];
 $sql = "SELECT status FROM vendors WHERE user_id = ?";
@@ -20,17 +22,13 @@ if ($vendor['status'] != 'approved') {
 }
 ?>
 
-<h2>Vendor Dashboard</h2>
-<p>Welcome, <?php echo $_SESSION['name']; ?>!</p>
+<h2 class="mb-4">Vendor Dashboard</h2>
+<p class="lead">Welcome, <?php echo $_SESSION['name']; ?>!</p>
 
-<hr>
+<div class="list-group mt-4" style="max-width: 300px;">
+    <a href="add_product.php" class="list-group-item list-group-item-action">Add Product</a>
+    <a href="my_product.php" class="list-group-item list-group-item-action">My Product</a>
+    <a href="orders.php" class="list-group-item list-group-item-action">My Orders</a>
+</div>
 
-<h3>Menu</h3>
-<ul>
-    <li><a href="add_product.php">Add Product</a></li>
-    <li><a href="my_product.php">My Products</a></li>
-</ul>
-
-<hr>
-
-<a href="../auth/logout.php">Logout</a>
+<?php require '../includes/footer.php'; ?>

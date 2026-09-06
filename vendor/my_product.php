@@ -7,6 +7,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'vendor') {
     exit();
 }
 
+require '../includes/header.php';
+
 $user_id = $_SESSION['user_id'];
 
 // Vendor ki apni vendor_id nikalo
@@ -39,30 +41,36 @@ mysqli_stmt_execute($stmt);
 $products_result = mysqli_stmt_get_result($stmt);
 
 ?>
-<h2>My Products</h2>
+<h2 class="mb-4">My Products</h2>
 
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Action</th>
-    </tr>
-
-    <?php while ($product = mysqli_fetch_assoc($products_result)): ?>
-    <tr>
-        <td><img src="../uploads/<?php echo $product['image']; ?>" width="60"></td>
-        <td><?php echo $product['name']; ?></td>
-        <td><?php echo $product['price']; ?></td>
-        <td><?php echo $product['stock']; ?></td>
-        <td>
-            <a href="edit_product.php?id=<?php echo $product['id']; ?>">Edit</a> |
-            <a href="my_product.php?delete_id=<?php echo $product['id']; ?>">Delete</a>
-        </td>
-    </tr>
-    <?php endwhile; ?>
+<div class="table-responsive">
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while ($product = mysqli_fetch_assoc($products_result)): ?>
+        <tr>
+            <td><img src="<?php echo (strpos($product['image'], 'http') === 0) ? $product['image'] : '../uploads/' . $product['image']; ?>" ...></td>
+            <td><?php echo $product['name']; ?></td>
+            <td>Rs. <?php echo $product['price']; ?></td>
+            <td><?php echo $product['stock']; ?></td>
+            <td>
+                <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
+                <a href="my_products.php?delete_id=<?php echo $product['id']; ?>" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+    </tbody>
 </table>
+</div>
 
-<br>
-<a href="dashboard.php">Back to Dashboard</a>
+
+
+<?php require '../includes/footer.php'; ?>

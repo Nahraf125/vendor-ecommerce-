@@ -7,6 +7,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'vendor') {
     exit();
 }
 
+require '../includes/header.php';
+
 // Vendor ki apni vendor_id nikalni hai (users table se link hai)
 $user_id = $_SESSION['user_id'];
 $sql = "SELECT id FROM vendors WHERE user_id = ?";
@@ -21,37 +23,53 @@ $vendor_id = $vendor['id'];
 $cat_result = mysqli_query($conn, "SELECT * FROM categories");
 ?>
 
-<h2>Add Product</h2>
+<div class="row justify-content-center">
+    <div class="col-md-6">
 
-<form action="add_product_process.php" method="POST" enctype="multipart/form-data">
+        <h2 class="mb-4">Add Product</h2>
 
-    <label>Product Name:</label><br>
-    <input type="text" name="name" required><br><br>
+        <form action="add_product_process.php" method="POST" enctype="multipart/form-data">
 
-    <label>Description:</label><br>
-    <textarea name="description"></textarea><br><br>
+            <div class="mb-3">
+                <label class="form-label">Product Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
 
-    <label>Price:</label><br>
-    <input type="number" step="0.01" name="price" required><br><br>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control"></textarea>
+            </div>
 
-    <label>Stock:</label><br>
-    <input type="number" name="stock" required><br><br>
+            <div class="mb-3">
+                <label class="form-label">Price</label>
+                <input type="number" step="0.01" name="price" class="form-control" required>
+            </div>
 
-    <label>Category:</label><br>
-    <select name="category_id" required>
-        <?php while ($cat = mysqli_fetch_assoc($cat_result)): ?>
-            <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
-        <?php endwhile; ?>
-    </select><br><br>
+            <div class="mb-3">
+                <label class="form-label">Stock</label>
+                <input type="number" name="stock" class="form-control" required>
+            </div>
 
-    <label>Product Image:</label><br>
-    <input type="file" name="image" accept="image/*" required><br><br>
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select name="category_id" class="form-select" required>
+                    <?php while ($cat = mysqli_fetch_assoc($cat_result)): ?>
+                        <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 
-    <input type="hidden" name="vendor_id" value="<?php echo $vendor_id; ?>">
+            <div class="mb-3">
+                <label class="form-label">Product Image</label>
+                <input type="file" name="image" class="form-control" accept="image/*" required>
+            </div>
 
-    <button type="submit">Add Product</button>
+            <input type="hidden" name="vendor_id" value="<?php echo $vendor_id; ?>">
 
-</form>
+            <button type="submit" class="btn btn-primary">Add Product</button>
 
-<br>
-<a href="dashboard.php">Back to Dashboard</a>
+        </form>
+
+    </div>
+</div>
+<?php require '../includes/footer.php'; ?>

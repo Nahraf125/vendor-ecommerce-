@@ -1,3 +1,20 @@
+
+<?php
+session_start();
+require '../includes/header.php';
+?>
+
+<?php if (isset($_GET['error'])): ?>
+    <div class="alert alert-danger" style="max-width: 500px; margin: auto;">
+        <?php if ($_GET['error'] == 'rejected'): ?>
+            Your vendor account was rejected.<br>
+            <strong>Reason:</strong> <?php echo htmlspecialchars($_GET['reason']); ?>
+        <?php elseif ($_GET['error'] == 'invalid'): ?>
+            Invalid email or password.
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,22 +22,34 @@
 </head>
 <body>
 
-    <h2>Login</h2>
+   <div class="row justify-content-center">
+    <div class="col-md-5">
 
-    <form action="login_process.php" method="POST">
+        <h2 class="mb-4">Login</h2>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <form action="login_process.php" method="POST">
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
 
-        <button type="submit">Login</button>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
 
-    </form>
-    
-    <p>Account nahi hai? <a href="register.php">Sign Up</a></p>
+            <button type="submit" class="btn btn-primary">Login</button>
 
+        </form>
+
+        <p class="mt-3">Account nahi hai? <a href="register.php">Sign Up</a></p>
+
+    </div>
+</div>
 
 </body>
 </html>
+
+
+<?php require '../includes/footer.php'; ?>

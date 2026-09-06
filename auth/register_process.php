@@ -25,7 +25,7 @@ if (mysqli_stmt_execute($stmt)) {
         mysqli_stmt_execute($stmt2);
     }
 
-    header("Location: login.php");
+    header("Location: /vendorwaala/customer/index.php");
     exit();
 
 } else {

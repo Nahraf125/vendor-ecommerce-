@@ -1,3 +1,10 @@
+<?php
+session_start();
+require '../includes/header.php';
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,31 +12,51 @@
 </head>
 <body>
 
-    <h2>Register</h2>
+    <div class="row justify-content-center">
+    <div class="col-md-5">
 
-    <form action="register_process.php" method="POST">
-        
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br><br>
+        <h2 class="mb-4">Register</h2>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <form action="register_process.php" method="POST">
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
 
-        <label>Register as:</label><br>
-        <select name="role">
-            <option value="customer">Customer</option>
-            <option value="vendor">Vendor</option>
-        </select><br><br>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
 
-        <label>Store name (only if Vendor)</label><br><br>
-        <input type="text" name= "store_name">
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
 
-        <button type="submit">Register</button>
+            <div class="mb-3">
+                <label class="form-label">Register as</label>
+                <select name="role" class="form-select">
+                    <option value="customer">Customer</option>
+                    <option value="vendor">Vendor</option>
+                </select>
+            </div>
 
-    </form>
+            <div class="mb-3">
+                <label class="form-label">Store Name (only if Vendor)</label>
+                <input type="text" name="store_name" class="form-control">
+            </div>
 
+            <button type="submit" class="btn btn-primary">Register</button>
+
+        </form>
+
+        <p class="mt-3">Pehle se account hai? <a href="login.php">Login</a></p>
+
+    </div>
+</div>
 </body>
 </html>
+
+
+<?php require '../includes/footer.php'; ?>

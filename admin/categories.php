@@ -36,30 +36,37 @@ if (isset($_GET['delete_id'])) {
 // Get all categories
 $sql = "SELECT * FROM categories";
 $result = mysqli_query($conn, $sql);
-
+require '../includes/header.php';
 ?>
-<h2>Manage Categories</h2>
+<h2 class="mb-4">Manage Categories</h2>
 
-<form action="categories.php" method="POST">
-    <input type="text" name="name" placeholder="Category name" required>
-    <button type="submit">Add Category</button>
+<form action="categories.php" method="POST" class="row g-2 mb-4">
+    <div class="col-auto">
+        <input type="text" name="name" class="form-control" placeholder="Category name" required>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Add Category</button>
+    </div>
 </form>
 
-<hr>
-
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Name</th>
-        <th>Action</th>
-    </tr>
-
-    <?php while ($row = mysqli_fetch_assoc($result)): ?>
-    <tr>
-        <td><?php echo $row['name']; ?></td>
-        <td><a href="categories.php?delete_id=<?php echo $row['id']; ?>">Delete</a></td>
-    </tr>
-    <?php endwhile; ?>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+        <tr>
+            <td><?php echo $row['name']; ?></td>
+            <td><a href="categories.php?delete_id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger">Delete</a></td>
+        </tr>
+        <?php endwhile; ?>
+    </tbody>
 </table>
 
 <br>
 <a href="dashboard.php">Back to Dashboard</a>
+
+<?php require '../includes/footer.php'; ?>

@@ -4,19 +4,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
     header("Location: ../auth/login.php");
     exit();
 }
+require '../includes/header.php';
+
 ?>
 
-<h2>Admin Dashboard</h2>
-<p>Welcome, <?php echo $_SESSION['name']; ?>!</p>
+<h2 class="mb-4">Admin Dashboard</h2>
+<p class="lead">Welcome, <?php echo $_SESSION['name']; ?>!</p>
 
-<hr>
+<div class="list-group mt-4" style="max-width: 300px;">
+    <a href="vendors.php" class="list-group-item list-group-item-action">Manage Vendors</a>
+    <a href="categories.php" class="list-group-item list-group-item-action">Manage Categories</a>
+    <a href="orders.php" class="list-group-item list-group-item-action">Manage Orders</a>
+</div>
 
-<h3>Menu</h3>
-<ul>
-    <li><a href="vendors.php">Manage Vendors</a></li>
-    <li><a href="categories.php">Manage Categories</a></li>
-</ul>
 
-<hr>
-
-<a href="../auth/logout.php">Logout</a>
+<?php require '../includes/footer.php'; ?>
