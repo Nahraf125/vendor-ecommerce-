@@ -36,41 +36,42 @@ if (isset($_POST['reject_id'])) {
 }
 
 
-$sql = "SELECT vendors.id , vendors.store_name , vendors.status , users.name , users.email FROM vendors
-        JOIN users ON vendors.user_id = users.id ";
+$sql = "SELECT vendors.*, users.name, users.email 
+        FROM vendors 
+        JOIN users ON vendors.user_id = users.id";
+        
 $result = mysqli_query($conn, $sql);
 
 ?>
 <h2 class="mb-4">Manage Vendors</h2>
 
-<div class="table-responsive">
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Store Name</th>
-            <th>Owner Name</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php while ($row = mysqli_fetch_assoc($result)): ?>
-        <tr>
-            <td><?php echo $row['store_name']; ?></td>
-            <td><?php echo $row['name']; ?></td>
-            <td><?php echo $row['email']; ?></td>
-            <td>
-                <?php if ($row['status'] == 'approved'): ?>
-                    <span class="badge bg-success">Approved</span>
-                <?php elseif ($row['status'] == 'rejected'): ?>
-                    <span class="badge bg-danger">Rejected</span>
-                <?php else: ?>
-                    <span class="badge bg-warning text-dark">Pending</span>
-                <?php endif; ?>
-            </td>
-            <td>
-                <?php if ($row['status'] == 'pending'): ?>
+<?php while ($row = mysqli_fetch_assoc($result)): ?>
+
+    <div class="card mb-3">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h5 class="card-title"><?php echo $row['store_name']; ?></h5>
+                    <p class="mb-1"><strong>Owner:</strong> <?php echo $row['name']; ?> (<?php echo $row['email']; ?>)</p>
+                    <p class="mb-1"><strong>Business Type:</strong> <?php echo ucfirst(str_replace('_', ' ', $row['business_type'])); ?></p>
+                    <p class="mb-1"><strong>Phone:</strong> <?php echo $row['phone']; ?></p>
+                    <p class="mb-1"><strong>CNIC:</strong> <?php echo $row['cnic']; ?></p>
+                    <p class="mb-1"><strong>Address:</strong> <?php echo $row['business_address']; ?></p>
+                </div>
+                <div>
+                    <?php if ($row['status'] == 'approved'): ?>
+                        <span class="badge bg-success">Approved</span>
+                    <?php elseif ($row['status'] == 'rejected'): ?>
+                        <span class="badge bg-danger">Rejected</span>
+                    <?php else: ?>
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php if ($row['status'] == 'pending'): ?>
+                <div class="mt-3">
                     <a href="vendors.php?action=approve&id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">Approve</a>
 
                     <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('reject-form-<?php echo $row['id']; ?>').style.display='block'">Reject</button>
@@ -82,14 +83,11 @@ $result = mysqli_query($conn, $sql);
                             <button type="submit" class="btn btn-sm btn-outline-danger">Confirm Reject</button>
                         </form>
                     </div>
+                </div>
+            <?php endif; ?>
 
-                <?php else: ?>
-                    —
-                <?php endif; ?>
-            </td>
-        </tr>
-        <?php endwhile; ?>
-    </tbody>
-</table>
-</div>
+        </div>
+    </div>
+
+<?php endwhile; ?>
 <?php require '../includes/footer.php'; ?>

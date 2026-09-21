@@ -57,7 +57,7 @@ require '../includes/header.php';
             <?php $subtotal = $item['price'] * $item['quantity']; ?>
             <?php $total += $subtotal; ?>
             <tr>
-                <td><img src="<?php echo (strpos($product['image'], 'http') === 0) ? $product['image'] : '../uploads/' . $product['image']; ?>" ...></td>
+                <td><img src="<?php echo (strpos($item['image'], 'http') === 0) ? $item['image'] : '../uploads/' . $item['image']; ?>" style="width: 60px; height: 60px; object-fit: cover;"></td>
                 <td><?php echo $item['name']; ?></td>
                 <td>Rs. <?php echo $item['price']; ?></td>
                 <td><?php echo $item['quantity']; ?></td>

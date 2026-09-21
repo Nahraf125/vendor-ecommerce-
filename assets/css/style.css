@@ -236,3 +236,20 @@ body {
     min-width: 18px;
     text-align: center;
 }
+/* ===== Stat Cards ===== */
+.stat-card {
+    border: none;
+    border-radius: 12px;
+}
+
+.stat-card h6 {
+    opacity: 0.85;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.stat-card h2 {
+    font-weight: 700;
+    margin-bottom: 0;
+}

@@ -2,23 +2,7 @@
 session_start();
 require '../config/db.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'vendor') {
-    header("Location: ../auth/login.php");
-    exit();
-}
-
-require '../includes/header.php';
-
-$user_id = $_SESSION['user_id'];
-
-// Vendor ki apni vendor_id nikalo
-$sql = "SELECT id FROM vendors WHERE user_id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$vendor = mysqli_fetch_assoc($result);
-$vendor_id = $vendor['id'];
+require '../includes/vendor_check.php';
 
 // Delete product (agar delete link click hua ho)
 if (isset($_GET['delete_id'])) {
@@ -40,6 +24,7 @@ mysqli_stmt_bind_param($stmt, "i", $vendor_id);
 mysqli_stmt_execute($stmt);
 $products_result = mysqli_stmt_get_result($stmt);
 
+require '../includes/header.php';
 ?>
 <h2 class="mb-4">My Products</h2>
 
@@ -57,13 +42,13 @@ $products_result = mysqli_stmt_get_result($stmt);
     <tbody>
         <?php while ($product = mysqli_fetch_assoc($products_result)): ?>
         <tr>
-            <td><img src="<?php echo (strpos($product['image'], 'http') === 0) ? $product['image'] : '../uploads/' . $product['image']; ?>" ...></td>
+            <td><img src="<?php echo (strpos($product['image'], 'http') === 0) ? $product['image'] : '../uploads/' . $product['image']; ?>" ... width="60"></td>
             <td><?php echo $product['name']; ?></td>
             <td>Rs. <?php echo $product['price']; ?></td>
             <td><?php echo $product['stock']; ?></td>
             <td>
                 <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
-                <a href="my_products.php?delete_id=<?php echo $product['id']; ?>" class="btn btn-sm btn-danger">Delete</a>
+                <a href="my_product.php?delete_id=<?php echo $product['id']; ?>" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
         <?php endwhile; ?>

@@ -2,21 +2,7 @@
 session_start();
 require '../config/db.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'vendor') {
-    header("Location: ../auth/login.php");
-    exit();
-}
-
-$user_id = $_SESSION['user_id'];
-
-// Vendor ki apni vendor_id nikalo
-$sql = "SELECT id FROM vendors WHERE user_id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$vendor = mysqli_fetch_assoc($result);
-$vendor_id = $vendor['id'];
+require '../includes/vendor_check.php';
 
 // Status update (agar dropdown se update hua)
 if (isset($_POST['update_status'])) {

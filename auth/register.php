@@ -17,6 +17,10 @@ require '../includes/header.php';
 
         <h2 class="mb-4">Register</h2>
 
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'exists'): ?>
+            <div class="alert alert-danger">This email is already registered. Please login instead.</div>
+        <?php endif; ?>
+
         <form action="register_process.php" method="POST">
 
             <div class="mb-3">

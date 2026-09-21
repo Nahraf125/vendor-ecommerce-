@@ -96,15 +96,21 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') {
             <a href="/vendorwaala/admin/vendors.php" class="text-white text-decoration-none small">Vendors</a>
             <a href="/vendorwaala/admin/categories.php" class="text-white text-decoration-none small">Categories</a>
             <a href="/vendorwaala/admin/orders.php" class="text-white text-decoration-none small">Orders</a>
+            <a href="/vendorwaala/admin/messages.php" class="text-white text-decoration-none small">Messages</a>
         <?php elseif (isset($_SESSION['user_id']) && $_SESSION['role'] == 'vendor'): ?>
             <a href="/vendorwaala/vendor/dashboard.php" class="text-white text-decoration-none small">Dashboard</a>
             <a href="/vendorwaala/vendor/add_product.php" class="text-white text-decoration-none small">Add Product</a>
             <a href="/vendorwaala/vendor/my_product.php" class="text-white text-decoration-none small">My Product</a>
             <a href="/vendorwaala/vendor/orders.php" class="text-white text-decoration-none small">Orders</a>
+            <a href="/vendorwaala/customer/contact.php" class="text-white text-decoration-none small">Contact</a>
         <?php else: ?>
             <a href="/vendorwaala/customer/index.php" class="text-white text-decoration-none small">Shop</a>
             <a href="/vendorwaala/customer/index.php" class="text-white text-decoration-none small">All Categories</a>
+            <a href="/vendorwaala/customer/contact.php" class="text-white text-decoration-none small">Contact</a>
+            <a href="/vendorwaala/customer/become_affiliate.php" class="text-white text-decoration-none small">Become Affiliate</a>
         <?php endif; ?>
+
+        
 
     </div>
 </div>
@@ -147,32 +153,88 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') {
                     <!-- REGISTER FORM -->
                     <div class="tab-pane fade" id="registerTab">
                         <form action="/vendorwaala/auth/register_process.php" method="POST">
+
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input type="text" name="name" class="form-control" required>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" name="email" class="form-control" required>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
                                 <input type="password" name="password" class="form-control" required>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Register as</label>
-                                <select name="role" class="form-select">
+                                <select name="role" class="form-select" id="roleSelect" onchange="toggleVendorFields()">
                                     <option value="customer">Customer</option>
                                     <option value="vendor">Vendor</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Store Name (only if Vendor)</label>
-                                <input type="text" name="store_name" class="form-control">
+
+                            <!-- Vendor-only fields, hidden by default -->
+                            <div id="vendorFields" style="display: none;">
+
+                                <div class="mb-3">
+                                    <label class="form-label">Store Name</label>
+                                    <input type="text" name="store_name" class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Business Type</label>
+                                    <select name="business_type" class="form-select">
+                                        <option value="individual">Individual Seller</option>
+                                        <option value="registered">Registered Business</option>
+                                        <option value="home_based">Home-based Business</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="text" name="phone" class="form-control" placeholder="03XX-XXXXXXX">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">CNIC Number</label>
+                                    <input type="text" name="cnic" class="form-control" placeholder="XXXXX-XXXXXXX-X">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Business Address</label>
+                                    <textarea name="business_address" class="form-control"></textarea>
+                                </div>
+
                             </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" name="terms" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms & Conditions</a>
+                                </label>
+                            </div>
+
                             <button type="submit" class="btn btn-primary w-100">Register</button>
+
                         </form>
                     </div>
+
+                    <script>
+                    function toggleVendorFields() {
+                        const role = document.getElementById('roleSelect').value;
+                        const vendorFields = document.getElementById('vendorFields');
+
+                        if (role === 'vendor') {
+                            vendorFields.style.display = 'block';
+                        } else {
+                            vendorFields.style.display = 'none';
+                        }
+                    }
+                    </script>
 
                 </div>
             </div>
@@ -181,8 +243,36 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') {
     </div>
 </div>
 
+<!-- TERMS & CONDITIONS MODAL -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms & Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Account Responsibility</h6>
+                <p>You are responsible for maintaining the confidentiality of your account and password.</p>
+
+                <h6>2. Vendor Conduct</h6>
+                <p>Vendors must provide accurate product information and honor orders placed by customers. Fraudulent listings will result in account suspension.</p>
+
+                <h6>3. Prohibited Activities</h6>
+                <p>Users may not engage in fraud, harassment, or any activity that violates applicable laws. Vendorwaala reserves the right to suspend or terminate accounts found in violation.</p>
+
+                <h6>4. Affiliate Program</h6>
+                <p>Commissions are only valid for genuine referrals. Self-referrals or fraudulent click activity will result in forfeiture of earnings and account termination.</p>
+
+                <h6>5. Changes to Terms</h6>
+                <p>Vendorwaala may update these terms at any time. Continued use of the platform constitutes acceptance of the updated terms.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container mt-4">
-    <?php if (isset($_GET['error'])): ?>
+   <?php if (isset($_GET['error'])): ?>
     <div class="container mt-3">
         <div class="alert alert-danger alert-dismissible fade show">
             <?php if ($_GET['error'] == 'rejected'): ?>
@@ -190,6 +280,10 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') {
                 <strong>Reason:</strong> <?php echo htmlspecialchars($_GET['reason']); ?>
             <?php elseif ($_GET['error'] == 'invalid'): ?>
                 Invalid email or password.
+            <?php elseif ($_GET['error'] == 'blocked'): ?>
+                 Your account has been blocked by the admin. <a href="/vendorwaala/customer/contact.php" class="alert-link">Contact support</a> if you think this is a mistake.
+            <?php elseif ($_GET['error'] == 'suspended'): ?>
+                  Your account has been temporarily suspended. <a href="/vendorwaala/customer/contact.php" class="alert-link">Contact support</a> if you think this is a mistake.
             <?php endif; ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>

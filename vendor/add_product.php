@@ -2,23 +2,9 @@
 session_start();
 require '../config/db.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'vendor') {
-    header("Location: ../auth/login.php");
-    exit();
-}
+require '../includes/vendor_check.php';;
 
 require '../includes/header.php';
-
-// Vendor ki apni vendor_id nikalni hai (users table se link hai)
-$user_id = $_SESSION['user_id'];
-$sql = "SELECT id FROM vendors WHERE user_id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$vendor = mysqli_fetch_assoc($result);
-$vendor_id = $vendor['id'];
-
 // Categories list karo dropdown ke liye
 $cat_result = mysqli_query($conn, "SELECT * FROM categories");
 ?>

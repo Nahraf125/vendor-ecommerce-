@@ -1,3 +1,4 @@
 config/db.php
 uploads/*
 !uploads/.gitkeep
+config/mailer.php

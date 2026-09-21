@@ -43,6 +43,31 @@ foreach ($cart_items as $item) {
     mysqli_stmt_execute($stmt2);
 }
 
+// Agar affiliate cookie hai, to commission record karo
+if (isset($_COOKIE['affiliate_ref'])) {
+    $ref_code = $_COOKIE['affiliate_ref'];
+
+    $sql_aff = "SELECT id FROM affiliates WHERE referral_code = ? AND status = 'approved'";
+    $stmt_aff = mysqli_prepare($conn, $sql_aff);
+    mysqli_stmt_bind_param($stmt_aff, "s", $ref_code);
+    mysqli_stmt_execute($stmt_aff);
+    $result_aff = mysqli_stmt_get_result($stmt_aff);
+    $affiliate = mysqli_fetch_assoc($result_aff);
+
+    if ($affiliate) {
+        $commission_rate = 0.05; // 5%
+        $commission_amount = $total * $commission_rate;
+
+        $sql_comm = "INSERT INTO affiliate_commissions (affiliate_id, order_id, amount) VALUES (?, ?, ?)";
+        $stmt_comm = mysqli_prepare($conn, $sql_comm);
+        mysqli_stmt_bind_param($stmt_comm, "iid", $affiliate['id'], $order_id, $commission_amount);
+        mysqli_stmt_execute($stmt_comm);
+
+        // Cookie clear kar do (ek order pe ek hi commission mile)
+        setcookie("affiliate_ref", "", time() - 3600, "/");
+    }
+}
+
 $sql3 = "DELETE FROM cart WHERE customer_id = ?";
 $stmt3 = mysqli_prepare($conn, $sql3);
 mysqli_stmt_bind_param($stmt3, "i", $customer_id);

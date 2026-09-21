@@ -15,6 +15,29 @@ $user = mysqli_fetch_assoc($result);
 
 if ($user && password_verify($password, $user['password'])) {
 
+    // Sabse pehle account status check karo
+    if ($user['account_status'] == 'blocked') {
+        header("Location: /vendorwaala/customer/index.php?error=blocked");
+        exit();
+    }
+
+    if ($user['account_status'] == 'suspended') {
+        header("Location: /vendorwaala/customer/index.php?error=suspended");
+        exit();
+    }
+
+}
+
+if ($user['is_verified'] == 0) {
+    $_SESSION['pending_verification_user'] = $user['id'];
+    header("Location: verify_otp.php");
+    exit();
+}
+
+
+
+if ($user && password_verify($password, $user['password'])) {
+
     if ($user['role'] == 'vendor') {
         $sql_v = "SELECT status, rejection_reason FROM vendors WHERE user_id = ?";
         $stmt_v = mysqli_prepare($conn, $sql_v);
