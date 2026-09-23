@@ -28,33 +28,54 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') {
 }
 ?>
 
-<!-- TOP BAR: Logo + Search + Account + Cart -->
-<div class="top-navbar py-2">
-    <div class="container d-flex align-items-center gap-3 flex-wrap">
 
-        <a class="navbar-brand d-flex align-items-center gap-2 text-white text-decoration-none" href="/vendorwaala/customer/index.php">
-            <i class="bi bi-shop fs-3"></i>
-            <span class="fw-bold">Vendorwaala</span>
-        </a>
+<nav class="navbar-dark sticky-top" style="padding: 0;">
 
-        <form action="/vendorwaala/customer/index.php" method="GET" class="flex-grow-1 d-none d-md-flex">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search everything...">
-                <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+    <!-- TOP BAR -->
+    <div class="top-navbar py-2 w-100">
+        <div class="container px-4 d-flex align-items-center">
+
+            <a class="navbar-brand d-flex align-items-center gap-2 text-white text-decoration-none me-3" href="/vendorwaala/customer/index.php">
+                <i class="bi bi-shop fs-3"></i>
+                <span class="fw-bold" style="font-size: 0.95rem;">Vendorwaala</span>
+            </a>
+
+            <div class="text-white d-none d-lg-flex flex-column justify-content-center me-3" style="line-height: 1.1;">
+                <span style="opacity: 0.7; font-size: 0.7rem;">Deliver to</span>
+                <span class="fw-semibold"><i class="bi bi-geo-alt"></i> Pakistan</span>
             </div>
-        </form>
 
-        <div class="ms-auto d-flex align-items-center gap-3">
+            <form action="/vendorwaala/customer/index.php" method="GET" class="d-none d-md-flex mx-3" style="flex: 1 1 auto; min-width: 200px; max-width: 600px;">
+                <div class="input-group">
+                    <select name="category_id" class="form-select category-select">
+                        <option value="">All</option>
+                        <?php
+                        $nav_cats = mysqli_query($conn, "SELECT * FROM categories");
+                        while ($ncat = mysqli_fetch_assoc($nav_cats)):
+                        ?>
+                            <option value="<?php echo $ncat['id']; ?>"><?php echo $ncat['name']; ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                    <input type="text" name="search" class="form-control" placeholder="Search everything...">
+                    <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
 
-            <?php if (isset($_SESSION['user_id'])): ?>
+            <div class="ms-auto d-flex align-items-center gap-3 flex-shrink-0">
 
-               <div class="dropdown">
-                        <a class="text-white text-decoration-none dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle fs-4"></i>
+                <div class="text-white d-none d-lg-flex flex-column justify-content-center" style="line-height: 1.1;">
+                    <span style="opacity: 0.7; font-size: 0.7rem;">Language</span>
+                    <span class="fw-semibold">EN</span>
+                </div>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+
+                    <div class="dropdown">
+                        <a class="text-white text-decoration-none dropdown-toggle d-flex flex-column justify-content-center" href="#" data-bs-toggle="dropdown" style="line-height: 1.1;">
+                            <span class="d-none d-lg-inline" style="opacity: 0.7; font-size: 0.7rem;">Hello, <?php echo explode(' ', $_SESSION['name'])[0]; ?></span>
+                            <span class="fw-semibold"><i class="bi bi-person-circle d-lg-none"></i><span class="d-none d-lg-inline">Account & Lists</span></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><h6 class="dropdown-header">Hi, <?php echo $_SESSION['name']; ?></h6></li>
-                            <li><hr class="dropdown-divider"></li>
                             <?php if ($_SESSION['role'] == 'admin'): ?>
                                 <li><a class="dropdown-item" href="/vendorwaala/admin/dashboard.php"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
                             <?php elseif ($_SESSION['role'] == 'vendor'): ?>
@@ -65,55 +86,77 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'customer') {
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" href="/vendorwaala/auth/logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
-               </div>
+                    </div>
 
-                <?php if ($_SESSION['role'] == 'customer'): ?>
-                    <a href="/vendorwaala/customer/cart.php" class="text-white text-decoration-none position-relative">
-                        <i class="bi bi-cart3 fs-4"></i>
-                        <?php if ($cart_count > 0): ?>
-                            <span class="cart-badge"><?php echo $cart_count; ?></span>
-                        <?php endif; ?>
+                    <?php if ($_SESSION['role'] == 'customer'): ?>
+                        <a href="/vendorwaala/customer/my_order.php" class="text-white text-decoration-none d-none d-lg-flex flex-column justify-content-center" style="line-height: 1.1;">
+                            <span style="opacity: 0.7; font-size: 0.7rem;">Returns</span>
+                            <span class="fw-semibold">& Orders</span>
+                        </a>
+
+                        <a href="/vendorwaala/customer/cart.php" class="text-white text-decoration-none position-relative">
+                            <i class="bi bi-cart3 fs-4"></i>
+                            <?php if ($cart_count > 0): ?>
+                                <span class="cart-badge"><?php echo $cart_count; ?></span>
+                            <?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+
+                <?php else: ?>
+                    <a class="text-white text-decoration-none d-flex flex-column justify-content-center" href="#" data-bs-toggle="modal" data-bs-target="#authModal" style="line-height: 1.1;">
+                        <span class="d-none d-lg-inline" style="opacity: 0.7; font-size: 0.7rem;">Hello, Sign in</span>
+                        <span class="fw-semibold"><i class="bi bi-person d-lg-none"></i><span class="d-none d-lg-inline">Account & Lists</span></span>
                     </a>
                 <?php endif; ?>
 
-            <?php else: ?>
-               <a href="#" class="text-white text-decoration-none" data-bs-toggle="modal" data-bs-target="#authModal">
-                  <i class="bi bi-person"></i> Sign In
-               </a>
-            <?php endif; ?>
+                <button class="navbar-toggler border-0 text-white p-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#categoryMenu">
+                    <i class="bi bi-list fs-2"></i>
+                </button>
 
+            </div>
         </div>
     </div>
-</div>
 
-<!-- SECOND BAR: Categories -->
-<!-- SECOND BAR: Role Links -->
-<div class="category-navbar">
-    <div class="container d-flex align-items-center gap-4 flex-wrap py-2">
-
-        <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'admin'): ?>
-            <a href="/vendorwaala/admin/dashboard.php" class="text-white text-decoration-none small">Dashboard</a>
-            <a href="/vendorwaala/admin/vendors.php" class="text-white text-decoration-none small">Vendors</a>
-            <a href="/vendorwaala/admin/categories.php" class="text-white text-decoration-none small">Categories</a>
-            <a href="/vendorwaala/admin/orders.php" class="text-white text-decoration-none small">Orders</a>
-            <a href="/vendorwaala/admin/messages.php" class="text-white text-decoration-none small">Messages</a>
-        <?php elseif (isset($_SESSION['user_id']) && $_SESSION['role'] == 'vendor'): ?>
-            <a href="/vendorwaala/vendor/dashboard.php" class="text-white text-decoration-none small">Dashboard</a>
-            <a href="/vendorwaala/vendor/add_product.php" class="text-white text-decoration-none small">Add Product</a>
-            <a href="/vendorwaala/vendor/my_product.php" class="text-white text-decoration-none small">My Product</a>
-            <a href="/vendorwaala/vendor/orders.php" class="text-white text-decoration-none small">Orders</a>
-            <a href="/vendorwaala/customer/contact.php" class="text-white text-decoration-none small">Contact</a>
-        <?php else: ?>
-            <a href="/vendorwaala/customer/index.php" class="text-white text-decoration-none small">Shop</a>
-            <a href="/vendorwaala/customer/index.php" class="text-white text-decoration-none small">All Categories</a>
-            <a href="/vendorwaala/customer/contact.php" class="text-white text-decoration-none small">Contact</a>
-            <a href="/vendorwaala/customer/become_affiliate.php" class="text-white text-decoration-none small">Become Affiliate</a>
-        <?php endif; ?>
-
-        
-
+    <!-- MOBILE SEARCH (only visible on small screens) -->
+    <div class="d-md-none w-100 px-3 py-2" style="background-color: var(--secondary-color);">
+        <form action="/vendorwaala/customer/index.php" method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search everything...">
+                <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
     </div>
-</div>
+
+    <!-- SECOND BAR: Role Links (collapsible on mobile) -->
+        <div class="collapse w-100" id="categoryMenu">
+        <div class="category-navbar w-100">
+            <div class="container-fluid px-4 d-flex align-items-center gap-4 flex-wrap py-2">
+
+                <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'admin'): ?>
+                    <a href="/vendorwaala/admin/dashboard.php" class="text-white text-decoration-none small">Dashboard</a>
+                    <a href="/vendorwaala/admin/vendors.php" class="text-white text-decoration-none small">Vendors</a>
+                    <a href="/vendorwaala/admin/categories.php" class="text-white text-decoration-none small">Categories</a>
+                    <a href="/vendorwaala/admin/orders.php" class="text-white text-decoration-none small">Orders</a>
+                    <a href="/vendorwaala/admin/affiliates.php" class="text-white text-decoration-none small">Affiliates</a>
+                    <a href="/vendorwaala/admin/users.php" class="text-white text-decoration-none small">Users</a>
+                    <a href="/vendorwaala/admin/messages.php" class="text-white text-decoration-none small">Messages</a>
+                <?php elseif (isset($_SESSION['user_id']) && $_SESSION['role'] == 'vendor'): ?>
+                    <a href="/vendorwaala/vendor/dashboard.php" class="text-white text-decoration-none small">Dashboard</a>
+                    <a href="/vendorwaala/vendor/add_product.php" class="text-white text-decoration-none small">Add Product</a>
+                    <a href="/vendorwaala/vendor/my_products.php" class="text-white text-decoration-none small">My Products</a>
+                    <a href="/vendorwaala/vendor/orders.php" class="text-white text-decoration-none small">Orders</a>
+                <?php else: ?>
+                    <a href="/vendorwaala/customer/index.php" class="text-white text-decoration-none small">Shop</a>
+                    <a href="/vendorwaala/customer/index.php" class="text-white text-decoration-none small">All Categories</a>
+                    <a href="/vendorwaala/customer/contact.php" class="text-white text-decoration-none small">Contact</a>
+                    <a href="/vendorwaala/customer/become_affiliate.php" class="text-white text-decoration-none small">Become Affiliate</a>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    </div>
+
+</nav>
 
 <!-- LOGIN / REGISTER MODAL -->
 <div class="modal fade" id="authModal" tabindex="-1">

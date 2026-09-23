@@ -62,12 +62,6 @@ require '../includes/header.php';
     <!-- RIGHT SIDE -->
     <div class="col-md-9">
 
-        <!-- SEARCH BAR -->
-        <form action="index.php" method="GET" class="d-flex gap-2 mb-4">
-            <input type="text" name="search" class="form-control" placeholder="Search products..." value="<?php echo $search; ?>">
-            <button type="submit" class="btn btn-primary px-4">Search</button>
-        </form>
-
         <!-- HERO BANNER -->
         <div class="hero-banner mb-4 p-5 rounded text-white">
             <h6 class="text-uppercase mb-1">🔥 Popular Products</h6>

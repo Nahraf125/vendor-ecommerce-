@@ -253,3 +253,18 @@ body {
     font-weight: 700;
     margin-bottom: 0;
 }
+/* ===== Amazon-style Search Bar ===== */
+.category-select {
+    max-width: 90px;
+    flex: 0 0 auto;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ccc;
+    font-size: 0.85rem;
+}
+/* Category menu hamesha khula rahe desktop pe, sirf mobile pe collapse ho */
+@media (min-width: 992px) {
+    #categoryMenu {
+        display: block !important;
+        height: auto !important;
+    }
+}
